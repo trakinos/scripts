@@ -41,6 +41,7 @@ $topo = "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\"
 \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">
 <html xmlns=\"http://www.w3.org/1999/xhtml\">
 <head>
+<!-- Otimizado -->
 <title>".$titulo." - ".$titulo_geral."</title>
 <meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" />
 <style type=\"text/css\">td img {display: block;}</style>
@@ -60,20 +61,23 @@ $bottom = "/table>
 $img_fix = "style=\"display:inline-block;border:0;\" src=\"".$server_path."images/";
 $arquivo = $path.$b.".html";
   $file = file_get_contents($arquivo);
-  // $troca = ("<title>", "</title>", "src=images/", "</table>", )
-  $parts = explode("<table", $file);
-  $frankstein = $topo.$parts[1];
-  $parts = explode("/table>", $frankstein);
-  $frankstein = $parts[0].$bottom;
-  $final = str_replace("src=\"images/", $img_fix, $frankstein);
-  echo $final;
-  // var_dump($parts);
-  // echo $file;
-  // echo $path;
-  $file_o = fopen($arquivo,"w");
-  fwrite($file_o ,$final);
-  fclose($file_o);
+  if (strpos($file, '<!-- Otimizado -->') !== false) {
+    // echo "\n";
+    echo "arquivo já otimizado";
+  } else {
+    $parts = explode("<table", $file);
+    $frankstein = $topo.$parts[1];
+    $parts = explode("/table>", $frankstein);
+    $frankstein = $parts[0].$bottom;
+    $final = str_replace("src=\"images/", $img_fix, $frankstein);
+    // echo $final;
+    $file_o = fopen($arquivo,"w");
+    fwrite($file_o ,$final);
+    fclose($file_o);
+    echo "\n";
+    echo $arquivo." re-escrito";
+  }
 }
-echo "arquivo re-escrito";
 echo "\n";
 // $file =
+?>
